@@ -1,49 +1,63 @@
 import puppeteer from 'puppeteer';
+import express from 'express';
 
+const app = express();
+app.use(express.json());
 
-console.log('Executando script..')
+app.get('/', async (req, res) => {
+  try {
+    console.log('Executando script..');
 
-const browser = await puppeteer.launch({
-    headless: false
-});
-const page = await browser.newPage();
-await page.goto('https://cliente.apdata.com.br/dicon/', {
-  waitUntil: 'networkidle2',
-});
+    // Configurações do Puppeteer
+    const browser = await puppeteer.launch({
+      headless: true, // Deve ser headless true para rodar na Vercel
+      args: ['--no-sandbox', '--disable-setuid-sandbox'], // Configuração necessária para Vercel
+    });
+    const page = await browser.newPage();
+    await page.goto('https://cliente.apdata.com.br/dicon/', {
+      waitUntil: 'networkidle2',
+    });
 
-// clicando no botão de aceitar os cookies
-await page.locator('#button-1020').wait();
-await page.locator('#button-1020').click();
+    // Aceitar cookies
+    await page.waitForSelector('#button-1020');
+    await page.click('#button-1020');
 
-// clicando no input de usuario e preenchendo com usuario
-await page.locator('#ext-156').click()
-await page.locator('#ext-156').fill('2738045');
+    // Preencher usuário e senha
+    await page.click('#ext-156');
+    await page.type('#ext-156', '2738045');
 
-await page.locator('#ext-155').click()
-await page.locator('#ext-155').fill('Public@99');
+    await page.click('#ext-155');
+    await page.type('#ext-155', 'Public@99');
 
-//ext-151 - botão de login.
-await page.locator('#ext-151').wait();
-await page.locator('#ext-151').click();
+    // Clicar no botão de login
+    await page.waitForSelector('#ext-151');
+    await page.click('#ext-151');
 
-//ext-139 - botão de ponto.
-//await page.locator('#ext-139').wait();
-//await page.locator('#ext-139').click();
+    // Aguardar navegação completa
+    try {
+      await page.waitForNavigation({ timeout: 90000, waitUntil: 'networkidle2' });
+    } catch (error) {
+      console.error('Erro de navegação:', error.message);
+    }
 
-try {     
-    await page.waitForNavigation({timeout: 90000, waitUntil: 'networkidle2' });
+    // Tirar screenshot
+    const screenshot = await page.screenshot({ encoding: 'base64' });
+
+    await browser.close();
+
+    console.log('Terminou de Executar o script..');
+
+    // Retornar a imagem como resposta
+    res.status(200).send(`<img src="data:image/png;base64,${screenshot}" />`);
   } catch (error) {
-    console.error('Navigation error:', error.message);
-    // Handle the error accordingly
+    res.status(500).json({ message: 'Erro ao executar o script', error: error.message });
   }
-
-await page.screenshot({
-  path: 'hn.png',
 });
 
-console.log('Terminou de Executar o script..')
+// Iniciar o servidor
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`API rodando na porta ${port}`);
+});
 
-await browser.close();
-
-//tudo certo ate aqui.
-
+export default app;
