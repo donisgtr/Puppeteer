@@ -1,11 +1,11 @@
 import puppeteer from 'puppeteer';
 
 (async () => {
-  console.log('Executando script..')
+  console.log('Executando script...');
 
   const browser = await puppeteer.launch({
-    headless: true, // modo headless para ambientes de produção
-    args: ['--no-sandbox', '--disable-setuid-sandbox'], // essas flags são necessárias em muitos ambientes de produção, incluindo Render
+    headless: true,  // Modo headless para rodar em produção
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],  // Flags necessárias para o Chromium em ambientes de contêiner
   });
 
   const page = await browser.newPage();
@@ -27,7 +27,7 @@ import puppeteer from 'puppeteer';
   await page.locator('#ext-151').wait();
   await page.locator('#ext-151').click();
 
-  // tentando navegar e capturar screenshot
+  // tentando navegação e capturando screenshot
   try {
     await page.waitForNavigation({ timeout: 90000, waitUntil: 'networkidle2' });
   } catch (error) {
@@ -36,6 +36,6 @@ import puppeteer from 'puppeteer';
 
   await page.screenshot({ path: 'hn.png' });
 
-  console.log('Terminou de Executar o script..');
+  console.log('Terminou de executar o script...');
   await browser.close();
 })();

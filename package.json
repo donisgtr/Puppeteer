@@ -1,5 +1,5 @@
 {
-  "name": "puppeteer-render",
+  "name": "puppeteer",
   "version": "1.0.0",
   "description": "Puppeteer script to automate tasks",
   "main": "index.js",
