@@ -18,7 +18,7 @@ app.get('/user', (req, res) => {
   });
 });
 
-// Rota para iniciar o Puppeteer e retornar a imagem como binário (GET /start-puppeteer)
+// Rota para iniciar o Puppeteer e retornar a imagem como binário
 app.get('/start-puppeteer', async (req, res) => {
   try {
     const browser = await puppeteer.launch({
@@ -68,6 +68,7 @@ app.get('/start-puppeteer', async (req, res) => {
     console.error('Erro na automação:', error.message);
     res.status(500).json({ error: 'Erro ao realizar a automação.' });
   }
+  
 });
 
 // Inicia o servidor
