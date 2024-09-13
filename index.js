@@ -22,7 +22,7 @@ app.get('/user', (req, res) => {
 app.get('/start-puppeteer', async (req, res) => {
   try {
     const browser = await puppeteer.launch({
-      headless: true // Define se o browser será exibido ou não
+      headless: true // não abrir
     });
     const page = await browser.newPage();
     await page.goto('https://cliente.apdata.com.br/dicon/', {
@@ -54,14 +54,21 @@ app.get('/start-puppeteer', async (req, res) => {
       console.error('Erro de navegação:', error.message);
     }
 
-    res.status(200).json({ error: 'deu certo' });
+    // Captura a screenshot e retorna como buffer
+    const screenshotBuffer = await page.screenshot();
 
-    
+    await browser.close();
+
+    // Define o cabeçalho para indicar que é uma imagem PNG
+    res.set('Content-Type', 'image/png');
+
+    // Envia a imagem como binário
+    res.end(screenshotBuffer, 'binary');
   } catch (error) {
     console.error('Erro na automação:', error.message);
     res.status(500).json({ error: 'Erro ao realizar a automação.' });
   }
-  
+
 });
 
 // Inicia o servidor
