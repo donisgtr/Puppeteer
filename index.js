@@ -18,7 +18,7 @@ app.get('/user', (req, res) => {
   });
 });
 
-// Rota para iniciar o Puppeteer e retornar a imagem como binário
+// Rota para iniciar o Puppeteer e retornar a imagem como binário (GET /start-puppeteer)
 app.get('/start-puppeteer', async (req, res) => {
   try {
     const browser = await puppeteer.launch({
@@ -59,11 +59,11 @@ app.get('/start-puppeteer', async (req, res) => {
 
     await browser.close();
 
-    // Configura o tipo de resposta como imagem PNG
+    // Define o cabeçalho para indicar que é uma imagem PNG
     res.set('Content-Type', 'image/png');
-    
+
     // Envia a imagem como binário
-    res.send(screenshotBuffer);
+    res.end(screenshotBuffer, 'binary');
   } catch (error) {
     console.error('Erro na automação:', error.message);
     res.status(500).json({ error: 'Erro ao realizar a automação.' });
