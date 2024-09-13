@@ -54,13 +54,7 @@ app.get('/start-puppeteer', async (req, res) => {
       console.error('Erro de navegação:', error.message);
     }
 
-    // Captura a screenshot e retorna como buffer
-    const screenshotBuffer = await page.screenshot();
-
-    await browser.close();
-
-    // Define o cabeçalho para indicar que é uma imagem PNG
-    res.set('Content-Type', 'image/png');
+    res.status(200).json({ error: 'deu certo' });
 
     // Envia a imagem como binário
     res.end(screenshotBuffer, 'binary');
