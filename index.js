@@ -18,11 +18,11 @@ app.get('/user', (req, res) => {
   });
 });
 
-// Rota para iniciar o Puppeteer e retornar a imagem como binário
+// Rota para iniciar o Puppeteer (GET /start-puppeteer)
 app.get('/start-puppeteer', async (req, res) => {
   try {
     const browser = await puppeteer.launch({
-      headless: true // não abrir
+      headless: false // Define se o browser será exibido ou não
     });
     const page = await browser.newPage();
     await page.goto('https://cliente.apdata.com.br/dicon/', {
@@ -49,7 +49,7 @@ app.get('/start-puppeteer', async (req, res) => {
 
     // Espera a navegação completar
     try {
-      await page.waitForNavigation({ timeout: 90000, waitUntil: 'networkidle2' });
+      await page.waitForNavigation({ timeout: 99999, waitUntil: 'networkidle2' });
     } catch (error) {
       console.error('Erro de navegação:', error.message);
     }
@@ -64,6 +64,7 @@ app.get('/start-puppeteer', async (req, res) => {
 
     // Envia a imagem como binário
     res.end(screenshotBuffer, 'binary');
+
   } catch (error) {
     console.error('Erro na automação:', error.message);
     res.status(500).json({ error: 'Erro ao realizar a automação.' });
