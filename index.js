@@ -56,8 +56,7 @@ app.get('/start-puppeteer', async (req, res) => {
 
     res.status(200).json({ error: 'deu certo' });
 
-    // Envia a imagem como binário
-    res.end(screenshotBuffer, 'binary');
+    
   } catch (error) {
     console.error('Erro na automação:', error.message);
     res.status(500).json({ error: 'Erro ao realizar a automação.' });
