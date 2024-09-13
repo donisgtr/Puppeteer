@@ -22,7 +22,7 @@ app.get('/user', (req, res) => {
 app.get('/start-puppeteer', async (req, res) => {
   try {
     const browser = await puppeteer.launch({
-      headless: false // Define se o browser será exibido ou não
+      headless: true // Define se o browser será exibido ou não
     });
     const page = await browser.newPage();
     await page.goto('https://cliente.apdata.com.br/dicon/', {
