@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "run dev"
   },
   "keywords": [],
   "author": "",
@@ -11,6 +11,7 @@
   "description": "",
   "dependencies": {
     "express": "^4.21.0",
-    "puppeteer": "^23.3.0"
+    "puppeteer": "^23.3.0",
+    "puppeteer-core": "^23.3.0"
   }
 }
