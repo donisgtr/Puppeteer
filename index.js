@@ -21,9 +21,12 @@ app.get('/user', (req, res) => {
 // Rota para iniciar o Puppeteer (GET /start-puppeteer)
 app.get('/start-puppeteer', async (req, res) => {
   try {
+    
     const browser = await puppeteer.launch({
-      headless: true // Define se o browser será exibido ou não
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/google-chrome', // usar variável de ambiente
+      args: ['--no-sandbox', '--disable-setuid-sandbox'], // evitar problemas de permissão no Docker
     });
+
     const page = await browser.newPage();
     await page.goto('https://cliente.apdata.com.br/dicon/', {
       waitUntil: 'networkidle2',
